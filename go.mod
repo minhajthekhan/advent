@@ -1,4 +1,4 @@
-module minhajuddinkhan/advent
+module minhajthekhan/advent
 
 go 1.22.1
 

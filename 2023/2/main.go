@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 	"log"
-	"minhajuddinkhan/advent/2023/2/cube"
+	"minhajthekhan/advent/2023/2/cube"
 	"os"
 )
 
