@@ -2,31 +2,30 @@ package main
 
 import (
 	"fmt"
+	"log"
+	"os"
+	"strings"
 )
 
 func main() {
-	// r := row("XMASSAMX")
-	// c := hasXMAS(r)
-	// fmt.Println(c)
 
-	x := []string{
-		"MMMSXXMASM",
-		"MSAMXMSMSA",
-		"AMXSXMAAMM",
-		"MSAMASMSMX",
-		"XMASAMXAMM",
-		"XXAMMXXAMA",
-		"SMSMSASXSS",
-		"SAXAMASAAA",
-		"MAMMMXMMMM",
-		"MXMXAXMASX",
+	b, err := os.ReadFile("./input.txt")
+	if err != nil {
+		log.Fatal(err)
 	}
+	x := (strings.Split(string(b), "\n"))
 
 	// x := []string{
-	// 	"X11S",
-	// 	"1M1A",
-	// 	"11AM",
-	// 	"111X",
+	// 	"MMMSXXMASM",
+	// 	"MSAMXMSMSA",
+	// 	"AMXSXMAAMM",
+	// 	"MSAMASMSMX",
+	// 	"XMASAMXAMM",
+	// 	"XXAMMXXAMA",
+	// 	"SMSMSASXSS",
+	// 	"SAXAMASAAA",
+	// 	"MAMMMXMMMM",
+	// 	"MXMXAXMASX",
 	// }
 
 	c := 0
@@ -40,7 +39,6 @@ func main() {
 		c += c3
 		c4, s := bottomUp(x[len(x)-i-1], x[0:len(x)-i-1], s)
 		c += c4
-		fmt.Println(s)
 	}
 	fmt.Println(c)
 }
@@ -130,9 +128,27 @@ func bottomUp(r string, listAbove []string, s string) (int, string) {
 		}
 	}
 
+	for i := 0; i < len(r); i++ {
+		if string(r[i]) == "S" && len(listAbove) > 2 && len(r[i:]) > 3 {
+			if string(listAbove[len(listAbove)-1][i+1]) == "A" && string(listAbove[len(listAbove)-2][i+2]) == "M" && string(listAbove[len(listAbove)-3][i+3]) == "X" {
+				c++
+				s = replaceAtIndex(s, 'X', i)
+			}
+		}
+	}
+
 	for i := len(r) - 1; i >= 0; i-- {
 		if string(r[i]) == "S" && len(listAbove) > 2 && len(r[:i]) >= 3 {
 			if string(listAbove[len(listAbove)-1][i-1]) == "A" && string(listAbove[len(listAbove)-1][i-2]) == "M" && string(listAbove[len(listAbove)-1][i-3]) == "X" {
+				c++
+				s = replaceAtIndex(s, 'S', i)
+			}
+		}
+	}
+
+	for i := len(r) - 1; i >= 0; i-- {
+		if string(r[i]) == "X" && len(listAbove) > 2 && len(r[:i]) >= 3 {
+			if string(listAbove[len(listAbove)-1][i-1]) == "M" && string(listAbove[len(listAbove)-2][i-2]) == "A" && string(listAbove[len(listAbove)-3][i-3]) == "S" {
 				c++
 				s = replaceAtIndex(s, 'S', i)
 			}
