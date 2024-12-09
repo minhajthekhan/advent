@@ -23,10 +23,10 @@ func main() {
 	}
 
 	// x := []string{
-	// 	"S",
-	// 	"A",
-	// 	"M",
-	// 	"X",
+	// 	"X11S",
+	// 	"1M1A",
+	// 	"11AM",
+	// 	"111X",
 	// }
 
 	c := 0
@@ -36,9 +36,10 @@ func main() {
 		// fmt.Println(s)
 		c2, s := topBottom(x[i], x[i+1:], s)
 		c += c2
-		c3, s := rightToLeft(x[len(x)-i-1], s)
+		c3, s := rightToLeft(x[i], s)
 		c += c3
-		c += bottomUp(x[len(x)-i-1], x[0:len(x)-i-1], s)
+		c4, s := bottomUp(x[len(x)-i-1], x[0:len(x)-i-1], s)
+		c += c4
 		fmt.Println(s)
 	}
 	fmt.Println(c)
@@ -72,7 +73,6 @@ func topBottom(r string, listBelow []string, s string) (int, string) {
 			if string(listBelow[0][i+1]) == "M" && string(listBelow[1][i+2]) == "A" && string(listBelow[2][i+3]) == "S" {
 				s = replaceAtIndex(s, 'X', i)
 				c++
-				i += 2
 			}
 		}
 	}
@@ -81,18 +81,15 @@ func topBottom(r string, listBelow []string, s string) (int, string) {
 			if string(listBelow[0][i-1]) == "A" && string(listBelow[1][i-2]) == "M" && string(listBelow[2][i-3]) == "X" {
 				s = replaceAtIndex(s, 'S', i)
 				c++
-				i -= 2
 			}
 		}
 	}
 
-	for i := 0; i < len(listBelow) && i < len(r); i++ {
+	for i := 0; i <= len(listBelow) && i < len(r); i++ {
 		if string(r[i]) == "X" && len(listBelow) > 2 {
 			if string(listBelow[0][i]) == "M" && string(listBelow[1][i]) == "A" && string(listBelow[2][i]) == "S" {
 				s = replaceAtIndex(s, 'X', i)
-
 				c++
-				i += 2
 			}
 		}
 	}
@@ -122,15 +119,13 @@ func rightToLeft(r string, s string) (int, string) {
 	return c, s
 }
 
-func bottomUp(r string, listAbove []string, s string) int {
-
+func bottomUp(r string, listAbove []string, s string) (int, string) {
 	c := 0
 	for i := 0; i < len(r); i++ {
 		if string(r[i]) == "X" && len(listAbove) > 2 && len(r[i:]) > 3 {
 			if string(listAbove[len(listAbove)-1][i+1]) == "M" && string(listAbove[len(listAbove)-2][i+2]) == "A" && string(listAbove[len(listAbove)-3][i+3]) == "S" {
 				c++
 				s = replaceAtIndex(s, 'X', i)
-				i += 2
 			}
 		}
 	}
@@ -140,22 +135,19 @@ func bottomUp(r string, listAbove []string, s string) int {
 			if string(listAbove[len(listAbove)-1][i-1]) == "A" && string(listAbove[len(listAbove)-1][i-2]) == "M" && string(listAbove[len(listAbove)-1][i-3]) == "X" {
 				c++
 				s = replaceAtIndex(s, 'S', i)
-
-				i -= 2
 			}
 		}
 	}
 
 	for i := len(r) - 1; i >= 0; i-- {
-		if string(r[i]) == "X" && len(listAbove) > 2 {
+		if string(r[i]) == "X" && len(listAbove) >= 2 {
 			if string(listAbove[len(listAbove)-1][i]) == "M" && string(listAbove[len(listAbove)-2][i]) == "A" && string(listAbove[len(listAbove)-3][i]) == "S" {
-				s = replaceAtIndex(s, 'S', i)
+				s = replaceAtIndex(s, 'X', i)
 				c++
-				i -= 2
 			}
 		}
 	}
-	return c
+	return c, s
 
 }
 
